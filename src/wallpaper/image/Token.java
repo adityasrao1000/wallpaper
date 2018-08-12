@@ -1,22 +1,22 @@
 package wallpaper.image;
 
 public class Token {
-	String provider;
-	String token;
+	private String provider;
+	private String token;
 
-	public void setProvider(String provider) {
+	protected void setProvider(String provider) {
 		this.provider = provider;
 	}
 
-	public String getProvider() {
+	protected String getProvider() {
 		return provider;
 	}
 
-	public void setToken(String token) {
+	protected void setToken(String token) {
 		this.token = token;
 	}
 
-	public String getToken() {
+	protected String getToken() {
 		return token;
 	}
 }
