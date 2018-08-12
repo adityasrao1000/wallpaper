@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import org.apache.log4j.Logger;
@@ -37,14 +39,37 @@ public class Image {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<String> get(@PathVariable("id") String id) {
+		ApplicationContext context = new ClassPathXmlApplicationContext("spring-jdbc.xml");
+		ImageJDBCTemplate imageJDBCTemplate = (ImageJDBCTemplate) context.getBean("ImageJDBCTemplate");
+		List<ImageDetails> result = imageJDBCTemplate.listImages(id);
+		if (context != null) {
+			if (context instanceof ApplicationContext) {
+				((AbstractApplicationContext) context).close();
+			}
+		}
 
-		return new ResponseEntity<String>(id, HttpStatus.OK);
+		if (result != null) {
+			ImageDetails record = result.get(0);
+			if (record != null) {
+				System.out.println();
+				return new ResponseEntity<String>(record.toString(), HttpStatus.OK);
+			}
+			return new ResponseEntity<String>(id, HttpStatus.NOT_FOUND);
+		} else {
+			return new ResponseEntity<String>(id, HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	@ResponseBody
 	public ResponseEntity<String> put(@PathVariable("id") String name, @RequestParam("file") MultipartFile file,
 			@RequestHeader("token") String token) {
+
+		String fileType = file.getContentType();
+		String[] types = { "image/gif", "image/jpeg", "image/jpg", "image/webp", "image/png" };
+		if (!Arrays.asList(types).contains(fileType)) {
+			return new ResponseEntity<String>("Invalid content, please upload an image", HttpStatus.BAD_REQUEST);
+		}
 
 		Gson gson = GsonSingleton.getGson();
 		RestTemplate restTemplate = new RestTemplate();

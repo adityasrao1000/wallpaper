@@ -40,4 +40,14 @@ class ImageDetails {
 	public Date getDate() {
 		return date;
 	}
+
+	@Override
+	public String toString() {
+		return "{\"id\":" + id + ",\"name\":" + name + ",\"user\":" + user + ",\"date\":" + date.toString() + "}";
+	}
+
+	@Override
+	public int hashCode() {
+		return this.hashCode();
+	}
 }
