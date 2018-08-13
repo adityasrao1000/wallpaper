@@ -29,6 +29,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import wallpaper.common.Social;
 import wallpaper.singleton.GsonSingleton;
 
 @CrossOrigin(origins = "*")
@@ -52,7 +54,7 @@ public class Image {
 			ImageDetails record = result.get(0);
 			if (record != null) {
 				System.out.println();
-				return new ResponseEntity<String>(record.toString(), HttpStatus.OK);
+				return new ResponseEntity<String>(record.toJSON(), HttpStatus.OK);
 			}
 			return new ResponseEntity<String>(id, HttpStatus.NOT_FOUND);
 		} else {
@@ -87,7 +89,7 @@ public class Image {
 			return new ResponseEntity<String>("Upload failed", HttpStatus.BAD_REQUEST);
 		}
 
-		if (auth_token.getProvider().equalsIgnoreCase("facebook")) {
+		if (auth_token.getProvider().equalsIgnoreCase(Social.FACEBOOK.value())) {
 			url = "https://graph.facebook.com/me?fields=name,email&access_token";
 		} else {
 			url = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token";
@@ -107,7 +109,7 @@ public class Image {
 
 			ApplicationContext context = new ClassPathXmlApplicationContext("spring-jdbc.xml");
 			ImageJDBCTemplate imageJDBCTemplate = (ImageJDBCTemplate) context.getBean("ImageJDBCTemplate");
-			int result = imageJDBCTemplate.create(getSaltString(), name, email, new Date());
+			int result = imageJDBCTemplate.create(getSaltString(60), name, email, new Date());
 			if (context != null) {
 				if (context instanceof ApplicationContext) {
 					((AbstractApplicationContext) context).close();
@@ -147,15 +149,18 @@ public class Image {
 	}
 
 	/**
-	 * Generates a random 60 characters string
+	 * Generates a random String of whose length is determined by the value of the
+	 * parameter passed
 	 * 
-	 * @return String length = 60
+	 * @param {{@code int} the length of the random String that is to be generated
+	 * @return {@code String} of length = to the parameter
 	 */
-	protected static String getSaltString() {
+
+	protected static String getSaltString(int len) {
 		String SALTCHARS = "abcdefghijklmnopqrstuvwxyz1234567890";
 		StringBuilder salt = new StringBuilder();
 		Random rnd = new Random();
-		while (salt.length() < 60) {
+		while (salt.length() < len) {
 			int index = (int) (rnd.nextFloat() * SALTCHARS.length());
 			salt.append(SALTCHARS.charAt(index));
 		}

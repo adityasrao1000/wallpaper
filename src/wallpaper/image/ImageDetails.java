@@ -41,13 +41,7 @@ class ImageDetails {
 		return date;
 	}
 
-	@Override
-	public String toString() {
+	public String toJSON() {
 		return "{\"id\":" + id + ",\"name\":" + name + ",\"user\":" + user + ",\"date\":" + date.toString() + "}";
-	}
-
-	@Override
-	public int hashCode() {
-		return this.hashCode();
 	}
 }
