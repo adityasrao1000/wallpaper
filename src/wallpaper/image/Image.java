@@ -149,13 +149,13 @@ public class Image {
 	}
 
 	/**
-	 * Generates a random String of whose length is determined by the value of the
-	 * parameter passed
+	 * <h1>Generates a random String of whose length is determined by the value of
+	 * the parameter passed</h1>
 	 * 
-	 * @param {{@code int} the length of the random String that is to be generated
-	 * @return {@code String} of length = to the parameter
+	 * @param of type int, it specifies the length of the random String that is to
+	 *           be generated
+	 * @return String of length = to the parameter
 	 */
-
 	protected static String getSaltString(int len) {
 		String SALTCHARS = "abcdefghijklmnopqrstuvwxyz1234567890";
 		StringBuilder salt = new StringBuilder();
