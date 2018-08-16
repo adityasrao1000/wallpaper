@@ -7,7 +7,7 @@ import java.io.File;
 
 public class MyWebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
-	private int maxUploadSizeInMb = 5 * 1024 * 1024; // 5 MB
+	private int maxUploadSizeInMb = 20 * 1024 * 1024; // 20 MB
 
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
